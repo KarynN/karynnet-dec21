@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<meta author='Karyn Nakamura'>
+	<title>KARYN NAKAMURA</title>
+	<meta name="viewport" content="initial-scale=1" /> 
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Overpass' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Cantarell&family=Exo+2:wght@100;200;300&family=IBM+Plex+Sans+KR:wght@200;300;400&family=Jura:wght@300&family=Quantico&family=Source+Code+Pro:wght@200;300;400&family=Space+Grotesk&family=Titillium+Web:wght@200;300&display=swap" rel="stylesheet">	<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+	<style type="text/css">
+		
+body {
+	margin: 0;
+	padding: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
+	}
+
+.link {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    text-decoration: none;
+    color: black;
+    font-family: Karla, sans serif;
+    transition-duration: 1s;
+    font-size: 15px;
+    font-weight: 300;
+        
+}
+
+.link:hover {
+  color: red;
+}
+
+.name {
+  text-align: center;
+  font-family: Quantico;
+  font-weight: 400;
+  letter-spacing: 3vw;
+  position: fixed;
+  bottom: 0px;
+  padding-bottom: 8.5%;
+  padding-top: 1.5%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  font-size: 3.5vw;
+  text-decoration: none;
+  color: black;
+  background-color: white;
+  width: 78%;
+  z-index: 999;
+}
+
+#header {
+  position: fixed;
+  top: 0px;
+  background-color: white;
+  width: 100%;
+  height: 20vh;
+}
+
+.footer {
+  position: fixed;
+  bottom: -1px;
+  background-color: white;
+  width: 100%;
+  height: 16%;
+}
+
+.footertext{
+  position: absolute;
+  font-family: Source Code Pro;
+  font-weight: 400;
+  font-size: 12px;
+  padding-left: 30px;
+  bottom: 5px;
+  z-index: 1000;
+}
+
+.name:hover {
+  color: red;
+}
+
+.button {
+  position: relative;
+  top: 3vh;
+  bottom: 0px;
+  min-width: 10px;
+	cursor: pointer;
+	text-align: center;
+	background: #fff;
+  border: 0px solid black;
+	font-size: 13px;
+	text-decoration: none;
+	color: #000;
+  font-family: Quantico;
+  display: none;
+  z-index: 1000;
+}
+
+.button:hover {
+			background: #fff;
+      color: red;
+			border: 0px solid black;
+		}
+
+#main {
+  background-color: white;
+  margin-left: 0vw;
+  top: 0px;
+}
+
+.tooltip {
+  opacity: 1;
+  position: absolute;
+  z-index: 998;
+  background-color: rgba(255, 255, 255, 1);
+  border: solid 0px white;
+  font-size: 15px;
+  font-weight: 400;
+  font-family: Cantarell;
+  color: black;
+  padding-left: 30px;
+  width: 100vw;
+  height: 15vh;
+  padding-top: 3vh;
+  padding-bottom: 1vh;
+
+}
+
+.thumbnail{
+  background-color: white;
+  pointer-events: none;
+  position: fixed;
+  top: 0vh;
+  padding-top: 3vh;
+  padding-bottom: 1vh;
+  right: 30px;
+  background-image: url("https://static.tumblr.com/3zmswwt/gL1ny5cm4/2cwrjc00.gif");
+  border: 0;
+  overflow-y: hidden;
+  height: 15vh;
+  width: auto;
+  z-index: 999;
+  display: none;
+}
+
+.selected {
+  opacity: 1 !important;
+  fill: red;
+
+}
+
+ 	</style>
+</head>
+
+<body>
+  <div id="main"></div>
+  <div id="header"></div>
+  <div class="footer">
+  </div>
+  <a class = "name" target = "_parent" href = "https://karynnakamura.com/info">KARYN NAKAMURA</a>
+  <div class="footer">
+    <button id="all" class="button">ALL</button>
+    <button id="Projection" class="button">PROJECTION</button>
+    <button id="Installation" class="button">INSTALLATION</button>
+    <button id="Website" class="button">WEBSITE</button>
+    <button id="Audiovisual" class="button">AUDIOVISUAL</button>
+    <button id="Motion Graphics" class="button">MOTION GRAPHICS</button>
+    <button id="Graphic Design" class="button">GRAPHIC DESIGN</button>
+    <button id="Misc" class="button">MISC</button>
+  </div>
+  <p class = "footertext">Select area to zoom.  Double click to zoom out.</p>
+  <img class = "thumbnail" src = "https://static.tumblr.com/3zmswwt/gL1ny5cm4/2cwrjc00.gif" >
+
+
+<script type="text/javascript">
+
+var winWidth = window.innerWidth*0.94;
+var winHeight = window.innerHeight*0.95;
+
+var svg = d3.select("#main")
+  .append("svg")
+    //.attr("width", winWidth)
+    //.attr("height", winHeight)
+    .attr("viewBox", "0, 0," +winWidth+"," + winHeight) 
+    .attr("preserveAspectRatio", "xMidYMid")
+  .append("g")
+    //.attr("transform", "translate("+winWidth*0.06+",0)")
+    //.attr("transform", "translate("+0+",0)")
+    //.attr("transform",
+    //      "translate(" + margin.left + "," + margin.top + ")")
+
+
+
+d3.csv('lseilfjaisaf.csv')
+	.then(function(data) {
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain([-600, 14500])
+    .range([ 0, winWidth ]);
+  var xAxis = svg.append("g")
+    //.attr("transform", "translate(0," + winHeight/2 + ")")
+    //.call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, 100])
+    .range([winHeight, 0]);
+  svg.append("g")
+    //.attr("transform", "translate("+winWidth*0.03+",0)")
+    //.call(d3.axisLeft(y));
+
+  var hours = d3.scaleLinear()
+    .domain([0.1, 100])
+    .range([2, 15]);
+
+
+var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+
+var mouseover = function(d) {
+  d3.select(this).style("fill", "red")
+  tooltip
+    .html("<span style = 'font-family: Quantico; font-size: 18px; line-height: 1.6em' >" + d["title"] + "</span>" + "<br><span style = 'font-family: Aldrich; font-weight: 200; font-size: 12px'>" + d["month"].toUpperCase() + " " + d["year"] + "<br><span style = 'font-family: Jura; font-size: 16px; line-height: 3em;'>" + d["what"].toLowerCase() + "</span></span>")
+    .style("opacity","1")
+    .style("top", 0)
+    .style("left", 0)
+
+  url = d["imglink"]
+  d3.select(".thumbnail").attr("src", url).style("background-image", "unset").style("display", "block")
+  
+  }
+
+var mouseleave = function(d) {
+  d3.select(this).style("fill", "black")
+  tooltip
+    .style("opacity", 0)
+  static = "https://static.tumblr.com/3zmswwt/gL1ny5cm4/2cwrjc00.gif"
+  d3.select(".thumbnail").attr("src", static).style("background-image", static).style("display", "none")
+  }
+
+  var clip = svg.append("defs").append("svg:clipPath")
+    .attr("id", "clip")
+    .append("svg:rect")
+    .attr("width", winWidth )
+    .attr("height", winHeight )
+    .attr("x", 0)
+    .attr("y", 0);
+
+
+  var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+    .extent( [ [0,0], [winWidth,winHeight] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+    .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+    .on("start brush", selectarea)
+
+  var scatter = svg.append('g')
+    .attr("clip-path", "url(#clip)")
+
+  scatter
+    .append("g")
+    .attr("class", "brush")
+    .call(brush);
+
+  scatter
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("rect")
+      .attr("id", function(d) { return String(d["no"])})
+      .attr("x", function(d) { return x(d["In h"]); })
+      .attr("y", 0)
+      .attr("width", function(d) { return hours(d["hours"]); })
+      .attr("height", function(d) { return winHeight; })
+      .attr("cursor", "pointer")
+      .attr("fill", "black").attr("opacity", 1)
+      .on("mouseover", mouseover)
+      .on("mouseleave", mouseleave)
+      .on("click", function(d) {window.location.href = d["pagelink"] })
+
+  var idleTimeout
+
+function idled() { idleTimeout = null; }
+
+function selectarea() {
+  selection = d3.event.selection
+
+  for (i = 0; i < data.length; i++) {
+    point = x(data[i]["In h"])
+    pointtitle = "#" + String(data[i]["no"])
+    if (selection!== null){
+      if (selection[0] <= point && point <= selection[1]) {
+        $(pointtitle).css("fill", "red")
+      }
+    }
+    else {
+      $(pointtitle).css("fill", "black")
+    }
+  }
+ }
+
+  function updateChart() {
+
+    extent = d3.event.selection
+
+    if(!extent){
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+      x.domain([0,14000])
+    }else{
+      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+      scatter.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+    }
+
+    xAxis.transition().duration(1000)//.call(d3.axisBottom(x))
+    scatter
+      .selectAll("rect")
+      .transition().duration(1000)
+      .attr("x", function (d) { return x(d["In h"]); } )
+      .attr("y", function (d) { return 0 } )
+    }
+
+
+ //SORTING   
+
+ /*
+  function sort(category){
+    for (i = 0; i < data.length; i++) {
+      pointtitle = "#" + String(data[i]["no"])
+      if (data[i]["cat1"] == category || data[i]["cat2"] == category){
+        $(pointtitle).css("visibility", "visible")
+      }
+      else {
+        $(pointtitle).css("visibility", "hidden")
+      }
+    }
+  }
+
+  
+  d3.selectAll(".button").on("click", function() { 
+    category = d3.select(this).attr("id")
+    sort(category)
+  })
+*/
+  
+})
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
